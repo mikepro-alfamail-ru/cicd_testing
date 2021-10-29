@@ -9,8 +9,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2    
-	- name: Run a multi-line script
-        run: |
+    - name: Run a multi-line script
+      run: |
         mkdir ../build
         cp -TR . ../build
         tar -cvf deploy.tar ../build/
