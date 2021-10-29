@@ -14,5 +14,5 @@ jobs:
         host: ${{ secrets.SERVER_IP }}
         username: ${{ secrets.LOGIN }}
         key: ${{ secrets.SSH_KEY }}
-        source: "docker-compose.yml"
-        target: "~/"
+        source: "."
+        target: "/tmp/"
