@@ -1,5 +1,4 @@
 version: '3.7'
-
 services:
   db-postgres:
     image: postgres:11.0-alpine
