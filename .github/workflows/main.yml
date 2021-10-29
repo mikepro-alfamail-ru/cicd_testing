@@ -1,5 +1,4 @@
-name: scp files
-
+name: scp files      
 on: [push]
 jobs:
 
