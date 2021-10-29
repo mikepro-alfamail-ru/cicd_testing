@@ -20,7 +20,7 @@ jobs:
       with:
         host: ${{ secrets.SERVER_IP }}
         username: ${{ secrets.LOGIN }}
-        key: ${{ secrets.SSHKEY }}
+        key: ${{ secrets.SSH_KEY }}
         port: "22"
         source: "deploy.tar"
         target: "/tmp"
