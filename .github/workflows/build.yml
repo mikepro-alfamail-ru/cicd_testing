@@ -26,7 +26,6 @@ on:
 
   deploy:
     runs-on: ubuntu-latest
-      needs: dockerize
       steps:
         - name: executing remote ssh commands to set env
           uses: appleboy/ssh-action@master
