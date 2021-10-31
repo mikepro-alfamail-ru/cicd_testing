@@ -4,11 +4,9 @@ services:
   db-postgres:
     image: postgres:11.0-alpine
     environment:
-      POSTGRES_USER: user_db
-      POSTGRES_PASSWORD: user_pass
-      POSTGRES_DB: db_api
-    ports:
-      - 5432:5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: netomerch
     volumes:
       - pg-data:/var/lib/postgresql/data
     networks:
@@ -16,33 +14,24 @@ services:
     hostname: db-postgres
 
   api:
-    build: ./app
-    command: sh ./run.sh
+    image: mikeproalfamailru/netomerch-backend:latest
+    environment:
+      SECRET_KEY: django-insecure-nw^y+m^wmxza1asgk+)!ua2qx9)g+#v=6%76-9i8i(6eqiw94j
+      DEBUG: 1
+      DB_ENGINE: django.db.backends.postgresql_psycopg2
+      DB_NAME: netomerch
+      DB_HOST: db-postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+    command: sh /netomerch-backend/run.sh
     depends_on:
       - db-postgres
-    volumes:
-      - ./app/:/usr/src/app/
-      - ./static:/usr/src/app/static/
     ports:
       - 8000:8000
-    env_file: 
-      - .env
     networks:
       - backend
     hostname: api
-
-  nginx:
-    build: ./nginx
-    depends_on:
-      - api
-    volumes:
-      - ./static/:/usr/share/nginx/static/
-      - ./nginxlog/:/var/log/nginx/
-    ports:
-      - 8080:80
-    networks:
-      - backend
-    hostname: nginx
 
 networks:
   backend:
