@@ -15,14 +15,16 @@ jobs:
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
+          registry: ghcr.io
+          username: ${{ secrets.REPO_LOGIN }}
+          password: ${{ secrets.REPO_TOKEN }}
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
-          push: true
-          tags: mikeproalfamailru/netomerch-backend:latest
+          push: true # Will only build if this is not here
+          tags: |
+            ghcr.io/${{ github.repository }}:${{ github.ref }}
+            ghcr.io/${{ github.repository }}:latest
 
       - name: executing remote ssh commands restart service
         uses: appleboy/ssh-action@master
@@ -43,6 +45,8 @@ jobs:
             echo POSTGRES_DB=${{ secrets.DB_NAME }} >> .env
             echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
             echo DEBUG=1 >> .env
+            echo ${{ secrets.REPO_TOKEN }} ${{ secrets.REPO_LOGIN }} ghcr.io/${{ github.repository }} >123.txt
             sh down.sh
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/netomerch-backend:latest
+            echo ${{ secrets.REPO_TOKEN }} | docker login ghcr.io -u ${{ secrets.REPO_LOGIN }} --password-stdin
+            docker pull ghcr.io/${{ github.repository }}:latest
             sh up.sh
