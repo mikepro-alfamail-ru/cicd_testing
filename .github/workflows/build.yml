@@ -39,7 +39,7 @@ jobs:
             echo DB_HOST=${{ secrets.DB_HOST }} >> .env
             echo DB_PORT=${{ secrets.DB_PORT }} >> .env
             echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
-            echo DEBUG=${{ secrets.DEBUG }} >> .env
+            echo DEBUG=1 >> .env
             sh down.sh
-            docker ${{ secrets.DOCKERHUB_USERNAME }}/netomerch-backend:latest
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/netomerch-backend:latest
             sh up.sh
