@@ -22,7 +22,5 @@ on:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: mikeproalfamailru/netomerch-backend:latest
-
-  deploy:
+          tags: mikeproalfamailru/netomerch-backend:latest 
     
