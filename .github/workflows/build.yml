@@ -26,23 +26,24 @@ on:
 
   deploy:
     runs-on: ubuntu-latest
-      steps:
-        - name: executing remote ssh commands to set env
-          uses: appleboy/ssh-action@master
-          with:
-            host: ${{ secrets.SERVER_IP }}
-            username: ${{ secrets.LOGIN }}
-            key: ${{ secrets.SSH_KEY }}
-            script: |
-              cd ~/netomerch-backend
-              echo DB_ENGINE=${{ secrets.DB_ENGINE }} > .env
-              echo DB_NAME=${{ secrets.DB_NAME }} >> .env
-              echo DB_USER=${{ secrets.DB_USER }} >> .env
-              echo DB_PASSWORD=${{ secrets.DB_PASSWORD }} >> .env
-              echo DB_HOST=${{ secrets.DB_HOST }} >> .env
-              echo DB_PORT=${{ secrets.DB_PORT }} >> .env
-              echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
-              echo DEBUG=${{ secrets.DEBUG }} >> .env
-              sh down.sh
-              docker ${{ secrets.DOCKERHUB_USERNAME }}/netomerch-backend:latest
-              sh up.sh
+    needs: dockerize
+    steps:
+      - name: executing remote ssh commands to set env
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.LOGIN }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd ~/netomerch-backend
+            echo DB_ENGINE=${{ secrets.DB_ENGINE }} > .env
+            echo DB_NAME=${{ secrets.DB_NAME }} >> .env
+            echo DB_USER=${{ secrets.DB_USER }} >> .env
+            echo DB_PASSWORD=${{ secrets.DB_PASSWORD }} >> .env
+            echo DB_HOST=${{ secrets.DB_HOST }} >> .env
+            echo DB_PORT=${{ secrets.DB_PORT }} >> .env
+            echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
+            echo DEBUG=${{ secrets.DEBUG }} >> .env
+            sh down.sh
+            docker ${{ secrets.DOCKERHUB_USERNAME }}/netomerch-backend:latest
+            sh up.sh
