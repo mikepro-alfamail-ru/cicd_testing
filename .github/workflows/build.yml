@@ -44,6 +44,7 @@ jobs:
             echo POSTGRES_DB=${{ secrets.DB_NAME }} >> .env
             echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
             echo DEBUG=1 >> .env
+            export REPO=${{ github.repository }}
             sh down.sh
             docker pull ghcr.io/${{ github.repository }}:latest
             sh up.sh
