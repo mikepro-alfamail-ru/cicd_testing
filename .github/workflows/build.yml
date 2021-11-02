@@ -36,8 +36,9 @@ jobs:
 
       - name: Deploy
         run: |
-#          sudo pip install docker-compose
           echo ${{ github.workspace }}
+
+#          sudo pip install docker-compose
 #          cd ${{ github.event.workspace }}/deploy-dev
 #          export SECRET_KEY=${{ secrets.SECRET_KEY }}
 #          docker context create remote --docker "host=ssh://${{ secrets.LOGIN }}@${{ secrets.SERVER_IP}}"
