@@ -37,6 +37,8 @@ jobs:
       - name: Deploy
         run: |
           echo ${{ github.workspace }}
+          ls -la ${{ github.workspace }}
+          cd ${{ github.workspace }}/deploy-dev
 
 #          sudo pip install docker-compose
 #          cd ${{ github.event.workspace }}/deploy-dev
