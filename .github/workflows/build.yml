@@ -39,7 +39,7 @@ jobs:
           cd ${{ github.workspace }}/deploy-dev
           sudo pip install docker-compose
           echo Instaled
-          export SECRET_KEY=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+          export SECRET_KEY=$(echo $RANDOM | md5sum | head -c 20; echo;)
           echo $SECRET_KEY
           export REPO_NAME=${{ github.repository }}
           echo $REPO_NAME
