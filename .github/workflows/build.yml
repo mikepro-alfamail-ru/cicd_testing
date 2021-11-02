@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [ master ]
 jobs: 
-  dockerize:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -37,7 +37,7 @@ jobs:
       - name: Setup python
         uses: actions/setup-python@v2
 
-      - name: Deploy
+      - name: Pull and restart
         run: |
           cd ${{ github.workspace }}/deploy-dev
           sudo pip install docker-compose
