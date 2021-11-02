@@ -46,4 +46,4 @@ jobs:
           docker context use remote
           docker pull ghcr.io/${{ github.repository }}:dev
           docker-compose --context remote down
-          docker-compose --context remote up -d --force-recreate
+          docker-compose --context remote up
