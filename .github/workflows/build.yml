@@ -2,9 +2,9 @@ name: ci
 
 on:
   push:
-    branches: [ master ]
+    branches: [ dev ]
   pull_request:
-    branches: [ master ]
+    branches: [ dev ]
 jobs: 
   deploy:
     runs-on: ubuntu-latest
@@ -46,4 +46,4 @@ jobs:
           docker context use remote
           docker pull ghcr.io/${{ github.repository }}:dev
           docker-compose --context remote down
-          docker-compose --context remote up
+          docker-compose --context remote up -d
