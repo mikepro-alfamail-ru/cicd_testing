@@ -37,8 +37,8 @@ jobs:
       - name: Deploy
         run: |
           sudo pip install docker-compose
-          ls -la /
-          cd ./deploy-dev
+          ls -la ~/
+#          cd ./deploy-dev
           export SECRET_KEY=${{ secrets.SECRET_KEY }}
           docker context create remote --docker "host=ssh://${{ secrets.LOGIN }}@${{ secrets.SERVER_IP}}"
           docker context use remote
