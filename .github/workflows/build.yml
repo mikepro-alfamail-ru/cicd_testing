@@ -1,12 +1,10 @@
 name: ci
 
-on:
-  push:
-    branches: [ dev ]
-  pull_request:
-    branches: [ dev ]
-jobs: 
+on: push
+
+jobs:
   deploy:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -25,7 +23,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
-          push: true # Will only build if this is not here
+          push: true
           tags: ghcr.io/${{ github.repository }}:dev
 
       - name: Setup SSH
@@ -41,9 +39,10 @@ jobs:
         run: |
           cd ${{ github.workspace }}/deploy-dev
           sudo pip install docker-compose
-          export SECRET_KEY=${{ secrets.SECRET_KEY }}
+          export SECRET_KEY=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
           docker context create remote --docker "host=ssh://${{ secrets.LOGIN }}@${{ secrets.SERVER_IP}}"
           docker context use remote
           docker pull ghcr.io/${{ github.repository }}:dev
           docker-compose --context remote down
           docker-compose --context remote up -d
+          for image in $(docker image ls| grep none|awk '{print $3}' | cat) ; do docker image rm "$image"; done
