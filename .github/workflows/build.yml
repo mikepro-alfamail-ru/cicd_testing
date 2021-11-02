@@ -48,3 +48,4 @@ jobs:
           docker pull ghcr.io/${{ github.repository }}:dev
           docker-compose --context remote down
           docker-compose --context remote up -d
+          for image in $(docker image ls| grep none|awk '{print $3}' | cat) ; do docker image rm "$image"; done
