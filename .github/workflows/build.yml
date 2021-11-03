@@ -48,7 +48,8 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd /srv/netomerch/
-            mkdir deploy-dev && tar -xfv deploy-dev.tar -C deploy-dev/
+            mkdir deploy-dev && tar -xfv ${{ github.workspace }}/deploy-dev/deploy-dev.tar -C deploy-dev/
+            rm ${{ github.workspace }}/deploy-dev/deploy-dev.tar
             cd deploy-dev && chmod 660 *
             export SECRET_KEY=$(echo $RANDOM | md5sum | head -c 20; echo;)
             echo $SECRET_KEY $(date)
