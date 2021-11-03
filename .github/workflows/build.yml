@@ -34,26 +34,39 @@ jobs:
       - name: Setup python
         uses: actions/setup-python@v2
 
-      - name: Pull and restart
+      -name: Tar
         run: |
           cd ${{ github.workspace }}/deploy-dev
-          echo install docker-compose $(date)
-          sudo pip install docker-compose
-          echo Instaled $(date)
-          export SECRET_KEY=$(echo $RANDOM | md5sum | head -c 20; echo;)
-          echo $SECRET_KEY $(date)
-          export REPO_NAME=${{ github.repository }}
-          echo $REPO_NAME $(date)
-          echo create remote context $(date)
-          docker context create remote --docker "host=ssh://${{ secrets.LOGIN }}@${{ secrets.SERVER_IP}}"
-          echo use remote context $(date)
-          docker context use remote
-          echo pull $(date)
-          docker pull ghcr.io/${{ github.repository }}:dev
-          echo down $(date)
-          docker-compose --context remote down
-          echo up $(date)
-          docker-compose --context remote up -d
-          echo rm old images $(date)
-          for image in $(docker image ls| grep none|awk '{print $3}' | cat) ; do docker image rm "$image"; done
-          echo all done $(date)
+          tar -cf deploy-dev.tar *
+
+
+      - name: upload docker-compose
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.LOGIN }}
+          key: ${{ secrets.SSH_KEY }}
+          source: "${{ github.workspace }}/deploy-dev/deploy-dev.tar"
+          tagret: "/srv/netomerch/backend/"
+
+      - name: Connect via SSH, pull, restart
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.LOGIN }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /srv/netomerch/
+            mkdir deploy-dev && tar -xfv deploy-dev.tar -C deploy-dev/
+            cd deploy-dev && chmod 660 *
+
+            export SECRET_KEY=$(echo $RANDOM | md5sum | head -c 20; echo;)
+            echo $SECRET_KEY $(date)
+            export REPO_NAME=${{ github.repository }}
+            echo $REPO_NAME $(date)
+            echo pull $(date)
+            docker pull ghcr.io/${{ github.repository }}:dev
+            echo down $(date)
+            docker-compose down
+            echo up $(date)
+            docker-compose up -d
