@@ -47,8 +47,8 @@ jobs:
           username: ${{ secrets.LOGIN }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd /srv/netomerch/
-            mkdir -p -m 660 deploy-dev && tar -xfv /srv/netomerch/backend/github/workspace/deploy-dev/deploy-dev.tar -C deploy-dev/
+            cd /srv/netomerch/backend/
+            mkdir -p -m 660 deploy-dev && tar -xfv /srv/netomerch/backend/github/workspace/deploy-dev/deploy-dev.tar -C ./deploy-dev/
             rm /srv/netomerch/backend/github/workspace/deploy-dev/deploy-dev.tar
             cd deploy-dev && chmod 660 *
             export SECRET_KEY=$(echo $RANDOM | md5sum | head -c 20; echo;)
