@@ -25,15 +25,6 @@ jobs:
           push: true
           tags: ghcr.io/${{ github.repository }}:dev
 
-      - name: Setup SSH
-        uses: kielabokkie/ssh-key-and-known-hosts-action@v1
-        with:
-          ssh-private-key: ${{ secrets.SSH_KEY }}
-          ssh-host: ${{ secrets.SERVER_IP }}
-
-      - name: Setup python
-        uses: actions/setup-python@v2
-
       - name: Tar
         run: |
           cd ${{ github.workspace }}/deploy-dev
@@ -47,7 +38,7 @@ jobs:
           username: ${{ secrets.LOGIN }}
           key: ${{ secrets.SSH_KEY }}
           source: "${{ github.workspace }}/deploy-dev/deploy-dev.tar"
-          tagret: "/srv/netomerch/backend/"
+          target: "/srv/netomerch/backend/"
 
       - name: Connect via SSH, pull, restart
         uses: appleboy/ssh-action@master
