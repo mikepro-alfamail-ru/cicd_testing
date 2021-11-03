@@ -37,15 +37,23 @@ jobs:
       - name: Pull and restart
         run: |
           cd ${{ github.workspace }}/deploy-dev
+          echo install docker-compose $(date)
           sudo pip install docker-compose
-          echo Instaled
+          echo Instaled $(date)
           export SECRET_KEY=$(echo $RANDOM | md5sum | head -c 20; echo;)
-          echo $SECRET_KEY
+          echo $SECRET_KEY $(date)
           export REPO_NAME=${{ github.repository }}
           echo $REPO_NAME
+          echo create remote context $(date)
           docker context create remote --docker "host=ssh://${{ secrets.LOGIN }}@${{ secrets.SERVER_IP}}"
+          echo use remote context $(date)
           docker context use remote
+          echo pull $(date)
           docker pull ghcr.io/${{ github.repository }}:dev
+          echo down $(date)
           docker-compose --context remote down
+          echo up $(date)
           docker-compose --context remote up -d
+          echo rm old images $(date)
           for image in $(docker image ls| grep none|awk '{print $3}' | cat) ; do docker image rm "$image"; done
+          echo all done $(date)
