@@ -19,7 +19,7 @@ jobs:
           host: ${{ secrets.SSH_SERVER }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
-          source: "deploy/*"
+          source: "deploy-dev/*"
           target: "~/netomerch/backend/${{ env.MODE }}"
           strip_components: 1
 
